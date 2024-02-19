@@ -159,7 +159,7 @@ namespace CapaDatos
                     SqlCommand cmd = new SqlCommand(query, oconexion);
                     cmd.Parameters.AddWithValue("@rutaimagen", obj.RutaImagen);
                     cmd.Parameters.AddWithValue("@nombreimagen", obj.NombreImagen);
-                    cmd.Parameters.AddWithValue("@IdProducto", obj.IdProducto);
+                    cmd.Parameters.AddWithValue("@idproducto", obj.IdProducto);
                     cmd.CommandType = CommandType.StoredProcedure;
 
                     oconexion.Open();

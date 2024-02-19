@@ -116,11 +116,10 @@
                 </form>
 
                 <!--Mensaje de alerta-->
-                <div class="row mt-3">
+                <div class="row mt-2">
                     <div class="col-12">
 
-                        <div id="mensajeError" class="alert alert-secondary" role="alert">
-                            A simple secondary alert—check it out!
+                        <div id="mensajeError" class="alert alert-danger" role="alert">
                         </div>
 
                     </div>
@@ -242,17 +241,49 @@
                             $("<option>").attr({ "value": "0", "disable": "true" }).text("Seleccionar").appendTo("#cbocategoria");
 
                             $.each(data.data, function (index, item) {
-                                $("<option>").attr({ "value": item.IdCategiria }).text(item.Descripcion).appendTo("#cbocategoria");
+                                $("<option>").attr({ "value": item.IdCategoria }).text(item.Descripcion).appendTo("#cbocategoria");
                         })
 
                     },
                     error: function (error) {
                         console.log(error)
-                    },
+                    }
+               });
 
+        jQuery.validator.addMethod("preciodecimal", function (value, element) {
+            return this.optional(element) || /^\d{0,4}(\.\d{0,2})?$/i.test(value);
+        }, "El formato correcto del precio es ##.##");
 
-                });
+        $("#contenedor").validate({
+            rules: {
+                nombre: {
+                    required: true
+                },
+                descripcion: {
+                    required: true
 
+                },
+                precio: {
+                    required: true,
+                    preciodecimal: true
+
+                },
+                stock: {
+                    required: true,
+                    number: true
+                }
+                
+
+            },
+            messages: {
+                nombre: "- El campo nombre es obligatorio",
+                descripcion: "- El campo descripcion es obligatorio",
+                precio: { required: "- El campo precio es obligatorio", preciodecimal: "El formato correcto del precio es ##.##" },
+                stock: { required: "- El campo stock es obligatorio", preciodecimal: "Debe ingresar solo numeros en el stock" }
+            },
+            errorElement: "div",
+            errorLabelContainer: ".alert-danger"
+        })
 
 
 
@@ -279,13 +310,36 @@
                 $("#txtnombre").val(json.Nombre);
                 $("#txtdescripcion").val(json.Descripcion);
                 $("#cbomarca").val(json.oMarca.IdMarca);
-                $("#cbocategoria").val(json.oCategoria.IdCategiria);
+                $("#cbocategoria").val(json.oCategoria.IdCategoria);
                 $("#txtprecio").val(json.Precio);
                 $("#txtstock").val(json.Stock);
-
-
-
                 $("#cboactivo").val(json.Activo == true ? 1 : 0);
+
+                jQuery.ajax({
+                    url: '@Url.Action("ImagenProducto", "Mantenedor")',
+                    type: "POST",
+                    data: JSON.stringify({ id: json.IdProducto }),
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    success: function (data) {
+                        $("#img_producto").LoadingOverlay("hide");
+
+                        if (data.conversion) {
+                            $("#img_producto").attr({ "src":"data:image/" + data.extension + ";base64," + data.textobase64 });
+                        }
+                    },
+                    error: function (error) {
+                        $("#img_producto").LoadingOverlay("hide");
+
+                        $("#mensajeError").show();
+                        $("#mensajeError").text("Error al mostrar imagen");
+
+
+                    },
+                    beforeSend: function () {
+                        $("#img_producto").LoadingOverlay("show");
+                    }
+                })
             }
             $("#FormModal").modal("show");
         }
@@ -350,11 +404,14 @@
 
         function Guardar() {
 
-            var ImagenSelecccionado = $("#fileProducto")[0].files[0];
+            if (!$("#contenedor").valid() ) {
+                return;
+            }
+
+            var ImagenSelecccionada = $("#fileProducto")[0].files[0];
             var Producto = {
 
                 IdProducto: $("#txtid").val(),
-
                 Nombre: $("#txtnombre").val(),
                 Descripcion: $("#txtdescripcion").val(),
                 oMarca: {
@@ -372,7 +429,7 @@
                 Activo: $("#cboactivo").val() == 1 ? true : false,
             }
 
-            var request = new formData();
+            var request = new FormData();
             request.append("objeto", JSON.stringify(Producto))
             request.append("archivoImagen", ImagenSelecccionada)
 
