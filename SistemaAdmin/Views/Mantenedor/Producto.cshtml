@@ -136,7 +136,7 @@
 
 @section scripts {
     <script>
-        var tabledata;
+        var tabladata;
         var filaSeleccionada;
 
         function mostrarImagen(input) {
@@ -459,9 +459,10 @@
                         }
 
                     }
+                
                     //PARA EDITAR UN PRODUCTO
                     else {
-                        if (data.operacionExistosa) {
+                        if (data.operacionExitosa) {
 
                             tabladata.row(filaSeleccionada).data(Producto).draw(false);
                             filaSeleccionada = null;
@@ -471,7 +472,6 @@
                         else {
                             $("#mensajeError").text(data.mensaje);
                             console.log("entro aqui", data)
-
                             $("#mensajeError").show();
                         }
                     }
