@@ -250,6 +250,7 @@
                     }
                });
 
+               //Problemas de precio
         jQuery.validator.addMethod("preciodecimal", function (value, element) {
             return this.optional(element) || /^\d{0,6}(\.\d{0,2})?$/i.test(value);
         }, "El formato correcto del precio es #######.##");
