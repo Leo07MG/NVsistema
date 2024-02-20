@@ -423,7 +423,7 @@
                     Descripcion: $("#cbocategoria option:Selected").text()
 
                 },
-                PrecioTexto: $("#txxtprecio").val(),
+                PrecioTexto: $("#txtprecio").val(),
                 Precio: $("#txtprecio").val(),
                 Stock: $("#txtstock").val(),
                 Activo: $("#cboactivo").val() == 1 ? true : false,
@@ -465,9 +465,12 @@
                             tabladata.row(filaSeleccionada).data(Producto).draw(false);
                             filaSeleccionada = null;
                             $("#FormModal").modal("hide");
+
                         }
                         else {
                             $("#mensajeError").text(data.mensaje);
+                            console.log("entro aqui", data)
+
                             $("#mensajeError").show();
                         }
                     }
@@ -475,6 +478,7 @@
                 error: function (error) {
                     $(".modal-body").LoadingOverlay("hide");
                     $("#mensajeError").text("Error Ajax");
+
                     $("#mensajeError").show();
                 },
                 beforeSend: function () {
