@@ -5,6 +5,8 @@
 }
 
 
+
+
 <ol class="breadcrumb mb-4 mt-4">
     <li class="breadcrumb-item"><a href="index.html">Inicio</a></li>
     <li class="breadcrumb-item active">Marca</li>
@@ -323,6 +325,8 @@
                     dataType: "json",
                     contentType: "application/json; charset=utf-8",
                     success: function (data) {
+
+
                         $("#img_producto").LoadingOverlay("hide");
 
                         if (data.conversion) {
@@ -362,7 +366,7 @@
             var data = tabladata.row(productoseleccionado).data();
 
             swal({
-                title: "¿Esta Seguro",
+                title: "¿Esta Seguro?",
                 text: "¿Desea eliminar el producto?",
                 type: "warning",
                 showCancelButton: true,
