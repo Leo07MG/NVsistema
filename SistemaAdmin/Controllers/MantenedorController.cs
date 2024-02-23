@@ -15,6 +15,7 @@ using Newtonsoft.Json;
 
 namespace SistemaAdmin.Controllers
 {
+    [Authorize]
     public class MantenedorController : Controller
     {
         // GET: Mantenedor
